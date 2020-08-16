@@ -332,12 +332,30 @@ const Repo: React.FC = () => {
             ) : (
               <>
                 <div className="commiter">
-                  {/* {repoCommits[0]?.author?.avatar_url && <img src={repoCommits[0].author.avatar_url} alt={repoCommits[0].author.login} />}
-                  {repoCommits[0]?.author?.login && <span className="user">{repoCommits[0].author.login}</span>}
-                  {repoCommits[0]?.commit?.message && <span className="message">{repoCommits[0].commit.message}</span>} */}
-                  <img src="https://avatars0.githubusercontent.com/u/10172199?v=4" alt="Leonardo Ronne" />
-                  <span className="user">leoronne</span>
-                  <span className="message">Mensagem teste</span>
+                  {repoCommits[0]?.author?.avatar_url && (
+                    <a href={`/${repoCommits[0].author.login}`} data-tip={`Go to ${repoCommits[0].author.login} profile`} target="_blank" rel="noopener noreferrer">
+                      <img src={repoCommits[0].author.avatar_url} alt={repoCommits[0].author.login} />
+                    </a>
+                  )}
+                  {repoCommits[0]?.author?.login && (
+                    <span className="user">
+                      <a
+                        href={`https://github.com/${username}/${reponame}/commits?author=${repoCommits[0]?.author?.login}`}
+                        data-tip={`See commits from ${repoCommits[0].author.login}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {repoCommits[0].author.login}
+                      </a>
+                    </span>
+                  )}
+                  {repoCommits[0]?.commit?.message && (
+                    <span className="message">
+                      <a href={`https://github.com/${username}/${reponame}/commit/${repoCommits[0].sha}`} data-tip="See commit on GitHub" target="_blank" rel="noopener noreferrer">
+                        {repoCommits[0].commit.message}
+                      </a>
+                    </span>
+                  )}
                 </div>
                 <div className="commiter-sha">
                   <CheckIcon />

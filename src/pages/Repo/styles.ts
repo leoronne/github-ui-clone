@@ -187,14 +187,14 @@ export const RightSide = styled.div`
 
 export const RepoInfoHeader = styled.div`
   height: 50px;
-  padding: 5px;
+  padding: 10px;
   border: 1px solid var(--border);
   background-color: var(--repoHeader);
   position: absolute;
   width: 100%;
   top: 0;
   display: grid;
-  grid-template-columns: auto 100px 130px 120px;
+  grid-template-columns: auto 100px 140px 120px;
   grid-gap: 10px;
   align-items: center;
 
@@ -204,9 +204,26 @@ export const RepoInfoHeader = styled.div`
     padding-left: 5px;
   }
 
+  > .commiter {
+    display: flex;
+    align-items: center;
+    > a img {
+      max-width: 30px;
+      border-radius: 50%;
+    }
+    > .user {
+      font-weight: 600;
+    }
+    > span {
+      font-size: 16px;
+      margin-left: 15px;
+    }
+  }
+
   > .commiter-sha {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     > svg {
       margin-top: 2px;
     }
@@ -221,11 +238,13 @@ export const RepoInfoHeader = styled.div`
     font-size: 16px;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
   }
 
   > .number-commits {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     > svg {
       margin-top: 2px;
     }
