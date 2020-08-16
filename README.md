@@ -1,14 +1,10 @@
 <p align="center">
-  <img src="src\assets\img\logo512.png" width="300px"/>
+  <img src="src\assets\img\socialBanner.png"/>
 </p>
 
 <h1 align="center">
   UI Clone - GitHub
 </h1>
-
-<p align="center">
-  <img src="src\assets\img\banner.png"/>
-</p>
 
 <br>
 
