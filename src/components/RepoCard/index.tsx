@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import languageColors from '../../utils/language-colors';
 
 import { Container, Topside, RepoIcon, Botside, StarIcon, ForkIcon, LanguageDot } from './styles';
+import kFormatter from '../../utils/kFormatter';
 
 interface Props {
   username: string;
@@ -43,13 +44,13 @@ const RepoCard: React.FC<Props> = ({ username, reponame, description, language, 
           {stars && stars > 0 ? (
             <li data-tip={`Repository has ${stars} stars`}>
               <StarIcon />
-              <span>{stars}</span>
+              <span>{kFormatter(stars)}</span>
             </li>
           ) : null}
           {forks && forks > 0 ? (
             <li data-tip={`Repository was forked by ${forks} users`}>
               <ForkIcon />
-              <span>{forks}</span>
+              <span>{kFormatter(forks)}</span>
             </li>
           ) : null}
         </ul>

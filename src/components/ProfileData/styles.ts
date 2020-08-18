@@ -19,6 +19,8 @@ export const Flex = styled.div`
       font-weight: 600;
     }
     > a {
+      width: 100%;
+      height: 100%;
       text-decoration: none;
       transition: filter 0.6s ease-in-out !important;
     }
@@ -55,6 +57,7 @@ export const Flex = styled.div`
 export const Avatar = styled.img`
   width: 16%;
   border-radius: 50%;
+  cursor: pointer;
 
   @media (min-width: 768px) {
     width: 100%;

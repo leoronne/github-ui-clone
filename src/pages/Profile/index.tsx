@@ -13,6 +13,7 @@ import Error404 from '../../components/Error404';
 import { APIUser, APIRepo } from '../../@types';
 import api from '../../services/api';
 import notify from '../../services/toast';
+import kFormatter from '../../utils/kFormatter';
 
 interface Data {
   user?: APIUser;
@@ -21,7 +22,7 @@ interface Data {
 }
 
 const Profile: React.FC = () => {
-  const { username = 'leoronne' } = useParams();
+  const { username = 'facebook' } = useParams();
   const [data, setData] = useState<Data>();
   const [panelActive, setPanelActive] = useState(1);
   const [repositories, setRepos] = useState([]);
@@ -73,11 +74,11 @@ const Profile: React.FC = () => {
         const userResponse = await api.get(`users/${username}`);
         const user = userResponse.data;
 
-        const reposResponse = await api.get(`users/${username}/repos`);
+        const reposResponse = await api.get(`users/${username}/repos?per_page=100`);
         const repos = reposResponse.data;
         setRepos(repos);
 
-        const orgsResponse = await api.get(`users/${username}/orgs`);
+        const orgsResponse = await api.get(`users/${username}/orgs?per_page=100`);
         const orgs = orgsResponse.data;
         setOrgs(orgs);
 
@@ -98,33 +99,6 @@ const Profile: React.FC = () => {
     }
     setData({});
     loadUserInfo();
-
-    // Promise.all([
-    //   fetch(`https://api.github.com/users/${username}`),
-    //   fetch(`https://api.github.com/users/${username}/repos`),
-    //   fetch(`https://api.github.com/users/${username}/orgs`),
-    // ]).then(async responses => {
-    //   const [userResponse, reposResponse, orgsResponse] = responses;
-
-    //   if (userResponse?.status === 404) {
-    //     setData({ error: 'User not found!' });
-    //     return;
-    //   }
-
-    //   const user = await userResponse.json();
-    //   const repos = await reposResponse.json();
-    //   const orgs = await orgsResponse.json();
-    //   setRepos(repos);
-    //   setOrgs(orgs);
-
-    //   const shuffledRepos = repos.sort(() => 0.5 - Math.random());
-    //   const slicedRepos = shuffledRepos.slice(0, 6); // 6 repos
-
-    //   setData({
-    //     user,
-    //     repos: slicedRepos,
-    //   });
-    // });
   }, [username]);
 
   if (loading) {
@@ -154,7 +128,7 @@ const Profile: React.FC = () => {
       <div className={`content ${panelActive === 2 ? ' active' : ''}`} onClick={() => setPanelActive(2)} role="button" data-tip="User's Repositories">
         <RepoIcon />
         <span className="label">Repositories</span>
-        <span className="number">{data.user?.public_repos}</span>
+        <span className="number">{kFormatter(data.user?.public_repos)}</span>
       </div>
       <div className="content" onClick={() => window.open(`https://github.com/${data.user.login}?tab=projects`, '_blank')} role="button" data-tip="Go to user's projects">
         <ProjectsIcon />
@@ -169,6 +143,7 @@ const Profile: React.FC = () => {
 
   return (
     <Container panelActive={panelActive} id="main-profile">
+      <ReactTooltip place="bottom" type="dark" effect="solid" />
       <Tab className="desktop">
         <div className="wrapper">
           <span className="offset" />
@@ -203,7 +178,7 @@ const Profile: React.FC = () => {
           {panelActive === 1 ? (
             <>
               <Repos>
-                <h2>Random Repositories</h2>
+                <h2>{data?.repos.length > 0 ? 'Random Repositories' : 'User does not have any public repositories yet'}</h2>
 
                 <div>
                   {data.repos.map(item => (
@@ -222,7 +197,7 @@ const Profile: React.FC = () => {
               </Repos>
 
               <CalendarHeading data-tip="Does not represent actual contribution data">
-                {`${Math.floor(Math.random() * (2000 - 1)) + 1} contributions in the last year`}
+                {`${kFormatter(Math.floor(Math.random() * (2000 - 1)) + 1)} contributions in the last year`}
               </CalendarHeading>
 
               <RandomCalendar />
@@ -231,7 +206,17 @@ const Profile: React.FC = () => {
             <>
               <Repos>
                 <h2>Repositories</h2>
-
+                {data?.repos.length > 0 && (
+                  <a
+                    href={`https://github.com/${username}?tab=repositories`}
+                    className="repo-link"
+                    data-tip={`see all repositories from ${username}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    see all repositories
+                  </a>
+                )}
                 <div>
                   {repositories.map(item => (
                     <RepoCard
@@ -251,7 +236,6 @@ const Profile: React.FC = () => {
           )}
         </RightSide>
       </Main>
-      <ReactTooltip place="bottom" type="dark" effect="solid" />
     </Container>
   );
 };

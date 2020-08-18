@@ -3,6 +3,11 @@ import { RiStarLine } from 'react-icons/ri';
 import { FaGithub } from 'react-icons/fa';
 import { Repositories, Fork, Tag, Check, Commits, Actions, Code, Issues, Insight, PullRequest, Security, Settings, Projects, OverView, Watch } from '../../styles/Icons';
 
+interface LanguageBarProps {
+  size: string;
+  color: string;
+}
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -171,30 +176,59 @@ export const RepoInformation = styled.div`
 
 export const RightSide = styled.div`
   height: 100%;
-  padding: 60px 10px 10px 10px;
+  padding: 60px 25px 30px 25px;
   position: relative;
   border: 1px solid var(--border);
   background-color: var(--btn);
   border-radius: 8px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(45%, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
   grid-gap: 5%;
 
   @media (max-width: 560px) {
     grid-template-columns: repeat(1, 1fr);
+    padding: 60px 15px 50px 15px;
   }
+`;
+
+export const HorizontalBar = styled.div`
+  height: 5px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  > div:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+  > div:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+  > div {
+    height: 100%;
+  }
+  > div + div {
+    margin-left: 2px;
+  }
+`;
+
+export const LanguageBar = styled.div<LanguageBarProps>`
+  width: ${props => (props.size ? `${props.size}%` : '100%')};
+  background-color: ${props => (props.color ? `${props.color}` : '#fff')};
 `;
 
 export const RepoInfoHeader = styled.div`
   height: 50px;
-  padding: 10px;
+  padding: 5px 10px;
   border: 1px solid var(--border);
   background-color: var(--repoHeader);
   position: absolute;
   width: 100%;
   top: 0;
   display: grid;
-  grid-template-columns: auto 100px 140px 120px;
+  grid-template-columns: auto 100px 170px 120px;
   grid-gap: 10px;
   align-items: center;
 
@@ -207,12 +241,24 @@ export const RepoInfoHeader = styled.div`
   > .commiter {
     display: flex;
     align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    > a {
+      display: flex;
+      align-items: center;
+    }
     > a img {
       max-width: 30px;
       border-radius: 50%;
     }
     > .user {
       font-weight: 600;
+    }
+    > .message {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     > span {
       font-size: 16px;
@@ -283,7 +329,7 @@ export const Row = styled.div`
 
   .languages {
     display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     grid-gap: 10px;
     align-items: center;
 

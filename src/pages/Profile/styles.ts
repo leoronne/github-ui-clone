@@ -62,10 +62,20 @@ export const RightSide = styled.div`
 
 export const Repos = styled.div`
   margin-top: var(--verticalPadding);
+  position: relative;
+
+  > .repo-link {
+    position: absolute;
+    font-size: 14px;
+    color: var(--link);
+    top: 0;
+    right: 0;
+  }
 
   > h2 {
     font-size: 16px;
-    font-weight: normal;
+    font-weight: 500;
+    margin-bottom: 15px;
   }
   > div {
     margin-top: 8px;

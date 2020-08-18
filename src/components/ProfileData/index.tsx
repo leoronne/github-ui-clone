@@ -17,6 +17,7 @@ import {
   OrganizationsContainer,
   OrganizationCard,
 } from './styles';
+import kFormatter from '../../utils/kFormatter';
 
 interface Orgs {
   login?: string;
@@ -52,9 +53,7 @@ const ProfileData: React.FC<Props> = ({ username, name, avatarUrl, followers, fo
   return (
     <Container>
       <Flex>
-        <a href={`https://github.com/${username}`} target="_blank" rel="noopener noreferrer" data-tip="Go to user's GitHub profile">
-          <Avatar src={avatarUrl} alt={username} data-tip="Go to user's GitHub profile" />
-        </a>
+        <Avatar src={avatarUrl} alt={username} data-tip="Go to user's GitHub profile" onClick={() => window.open(`https://github.com/${username}`, 'blank')} />
 
         <div>
           <h1>{name}</h1>
@@ -69,13 +68,13 @@ const ProfileData: React.FC<Props> = ({ username, name, avatarUrl, followers, fo
       <Row>
         <li className="link-li" onClick={() => window.open(`https://github.com/${username}?tab=followers`, '_blank')} data-tip="Go to user's followers">
           <PeopleIcon />
-          <b>{followers}</b>
+          <b>{kFormatter(followers)}</b>
           <span>followers</span>
           <span>·</span>
         </li>
 
         <li className="link-li" onClick={() => window.open(`https://github.com/${username}?tab=following`, '_blank')} data-tip="Go to user's followings">
-          <b>{following}</b>
+          <b>{kFormatter(following)}</b>
           <span>following</span>
         </li>
       </Row>

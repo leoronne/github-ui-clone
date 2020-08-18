@@ -9,6 +9,7 @@ import { useFavicon } from 'react-use';
 import notify from '../../services/toast';
 
 import languageColors from '../../utils/language-colors';
+import kFormatter from '../../utils/kFormatter';
 
 import Error404 from '../../components/Error404';
 
@@ -47,6 +48,8 @@ import {
   IssuesIcon,
   CommitsIcon,
   CheckIcon,
+  HorizontalBar,
+  LanguageBar,
 } from './styles';
 
 import { APIRepo } from '../../@types';
@@ -91,7 +94,11 @@ const Repo: React.FC = () => {
 
   useFavicon(`${window.location.origin}/favicon.ico`);
 
-  // https://api.github.com/repos/leoronne/twitter-ui-clone
+  const sumValues = obj => Object.values(obj).reduce((a: number, b: number) => a + b);
+  const getPercentageValue = (value: number, total: number) => {
+    const percentage = (value * 100) / total;
+    return percentage.toFixed(2);
+  };
 
   useEffect(() => {
     async function loadRepoInfo() {
@@ -111,15 +118,31 @@ const Repo: React.FC = () => {
 
         const languagesResponse = await api.get(`repos/${username}/${reponame}/languages`);
         const languages = languagesResponse.data;
-        setLanguages(Object.keys(languages));
+        if (languages !== {}) {
+          const allMb = sumValues(languages);
+          const languageKeys = Object.keys(languages);
+          const calculatedLanguages = languageKeys.map(lang => {
+            return { language: lang, percentage: getPercentageValue(languages[lang], Number(allMb)) };
+          });
+          if (calculatedLanguages.length > 7) {
+            const mainLanguages = calculatedLanguages.slice(0, 6); // 6 languages
+            const slicedLanguages = calculatedLanguages.slice(6, calculatedLanguages.length); // other languages
+            let remainingValues = 0;
+            slicedLanguages.forEach(lng => {
+              remainingValues += Number(lng.percentage);
+            });
+            mainLanguages.push({ language: 'Other', percentage: String(remainingValues) });
+            setLanguages(mainLanguages);
+          } else setLanguages(calculatedLanguages);
+        }
 
-        const pullsResponse = await api.get(`repos/${username}/${reponame}/pulls`);
+        const pullsResponse = await api.get(`repos/${username}/${reponame}/pulls?per_page=100`);
         const pulls = pullsResponse.data;
         setPulls(pulls.length > 0 ? pulls.length : 0);
 
-        const issuesResponse = await api.get(`repos/${username}/${reponame}/issues`);
-        const issues = issuesResponse.data;
-        setIssues(issues.length > 0 ? issues.length : 0);
+        // const issuesResponse = await api.get(`repos/${username}/${reponame}/issues?per_page=100`);
+        // const issues = issuesResponse.data;
+        setIssues(repo.open_issues > 0 ? repo.open_issues - (pulls.length > 0 ? pulls.length : 0) : repo.open_issues);
 
         const contributorsResponse = await api.get(`repos/${username}/${reponame}/contributors`);
         const contributors = contributorsResponse.data;
@@ -144,46 +167,6 @@ const Repo: React.FC = () => {
       }
     }
     loadRepoInfo();
-    // Promise.all([
-    //   fetch(`https://api.github.com/repos/${username}/${reponame}`),
-    //   fetch(`https://api.github.com/repos/${username}/${reponame}/commits`),
-    //   fetch(`https://api.github.com/repos/${username}/${reponame}/releases`),
-    //   fetch(`https://api.github.com/repos/${username}/${reponame}/languages`),
-    //   fetch(`https://api.github.com/repos/${username}/${reponame}/pulls`),
-    //   fetch(`https://api.github.com/repos/${username}/${reponame}/issues`),
-    //   fetch(`https://api.github.com/repos/${username}/${reponame}/contributors`),
-    // ]).then(async responses => {
-    //   const [repoResponse, commitsResponse, releasesResponse, languagesResponse, pullsResponse, issuesResponse, contributorsResponse] = responses;
-    //   if (repoResponse?.status === 404) {
-    //     setData({ error: 'Repository not found!' });
-    //     return;
-    //   }
-
-    //   const repo = await repoResponse.json();
-    //   const commits = await commitsResponse.json();
-
-    //   if (commitsResponse?.status === 409) {
-    //     setData({ repo });
-    //     setEmptyRepo(true);
-    //     throw new Error('Repository is empty!');
-    //   }
-
-    //   const releases = await releasesResponse.json();
-    //   const languages = await languagesResponse.json();
-    //   const pulls = await pullsResponse.json();
-    //   const issues = await issuesResponse.json();
-    //   const contributors = await contributorsResponse.json();
-
-    //   const shuffledContributors = contributors.sort(() => 0.5 - Math.random());
-    //   const slicedContributors = shuffledContributors.slice(0, 10);
-    //   setLanguages(Object.keys(languages));
-    //   setReleases(releases);
-    //   setPulls(pulls.length > 0 ? pulls.length : 0);
-    //   setIssues(issues.length > 0 ? issues.length : 0);
-    //   setContributors(slicedContributors);
-    //   setCommits(commits);
-    //   setData({ repo });
-    // });
   }, [reponame, username]);
 
   function getLanguageColor(language) {
@@ -284,7 +267,7 @@ const Repo: React.FC = () => {
             >
               <WatchIcon />
               <span>Watch</span>
-              <b>{data.repo.subscribers_count}</b>
+              <b>{kFormatter(data.repo.subscribers_count)}</b>
             </li>
             <li
               data-tip={`This repository has ${data.repo.stargazers_count} stars`}
@@ -293,7 +276,7 @@ const Repo: React.FC = () => {
             >
               <StarIcon />
               <span>Star</span>
-              <b>{data.repo.stargazers_count}</b>
+              <b>{kFormatter(data.repo.stargazers_count)}</b>
             </li>
             <li
               data-tip={`This repository was forked by ${data.repo?.fork && data.repo?.parent?.forks_count ? data.repo.parent.forks_count : data.repo.forks} users`}
@@ -302,7 +285,7 @@ const Repo: React.FC = () => {
             >
               <ForkIcon />
               <span>Fork</span>
-              <b>{data.repo?.fork && data.repo?.parent?.forks_count ? data.repo.parent.forks_count : data.repo.forks}</b>
+              <b>{data.repo?.fork && data.repo?.parent?.forks_count ? kFormatter(data.repo.parent.forks_count) : kFormatter(data.repo.forks)}</b>
             </li>
           </Stats>
         </HeaderInfo>
@@ -351,7 +334,7 @@ const Repo: React.FC = () => {
                   )}
                   {repoCommits[0]?.commit?.message && (
                     <span className="message">
-                      <a href={`https://github.com/${username}/${reponame}/commit/${repoCommits[0].sha}`} data-tip="See commit on GitHub" target="_blank" rel="noopener noreferrer">
+                      <a href={`https://github.com/${username}/${reponame}/commit/${repoCommits[0].sha}`} target="_blank" rel="noopener noreferrer">
                         {repoCommits[0].commit.message}
                       </a>
                     </span>
@@ -395,11 +378,17 @@ const Repo: React.FC = () => {
             <Row>
               <h4>Languages</h4>
 
+              <HorizontalBar>
+                {repoLanguages.map(lng => (
+                  <LanguageBar color={getLanguageColor(lng.language)} size={lng.percentage} key={lng.language} />
+                ))}
+              </HorizontalBar>
+
               <ul className="languages">
-                {repoLanguages.map((language, index) => (
+                {repoLanguages.map((lng, index) => (
                   <li key={index}>
-                    <LanguageDot color={getLanguageColor(language)} />
-                    <span>{language}</span>
+                    <LanguageDot color={getLanguageColor(lng.language)} />
+                    <span>{`${lng.language}: ${lng.percentage}%`}</span>
                   </li>
                 ))}
               </ul>
