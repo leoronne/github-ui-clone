@@ -2,10 +2,6 @@
   <img src="src\assets\img\socialBanner.png"/>
 </p>
 
-<h1 align="center">
-  UI Clone - GitHub
-</h1>
-
 <br>
 
 <p align="center">
@@ -15,6 +11,12 @@
   <a href="#test-heavy_check_mark">Test</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#contributing-">Contributing</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#license-memo">License</a>
+</p>
+
+<br>
+
+<p align="center">
+  <img src="src\assets\img\banner.png"/>
 </p>
 
 <br>
