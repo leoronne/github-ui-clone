@@ -52,6 +52,7 @@ export const Tabs = styled.div`
   ::-webkit-scrollbar-thumb {
     background: var(--gray-light);
   }
+
   ::-webkit-scrollbar {
     height: 5px !important;
     width: 5px !important;
@@ -187,7 +188,7 @@ export const RightSide = styled.div`
 
   @media (max-width: 560px) {
     grid-template-columns: repeat(1, 1fr);
-    padding: 60px 15px 50px 15px;
+    padding: 60px 15px 90px 15px;
   }
 `;
 

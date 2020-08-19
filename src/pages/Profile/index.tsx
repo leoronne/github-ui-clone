@@ -15,6 +15,7 @@ import { APIUser, APIRepo } from '../../@types';
 import api from '../../services/api';
 import notify from '../../services/toast';
 import kFormatter from '../../utils/kFormatter';
+import useWindowSize from '../../utils/useWindowSize';
 
 interface Data {
   user?: APIUser;
@@ -30,29 +31,6 @@ const Profile: React.FC = () => {
   const [organizations, setOrgs] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  function useWindowSize() {
-    const [windowSize, setWindowSize] = useState({
-      width: undefined,
-      height: undefined,
-    });
-
-    useEffect(() => {
-      function handleResize() {
-        setWindowSize({
-          width: window.innerWidth,
-          height: window.innerHeight,
-        });
-      }
-
-      window.addEventListener('resize', handleResize);
-
-      handleResize();
-
-      return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    return windowSize;
-  }
   const size = useWindowSize();
 
   useEffect(() => {

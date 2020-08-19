@@ -54,6 +54,7 @@ import {
 
 import { APIRepo } from '../../@types';
 import api from '../../services/api';
+import useWindowSize from '../../utils/useWindowSize';
 
 interface Data {
   repo?: APIRepo;
@@ -99,6 +100,20 @@ const Repo: React.FC = () => {
     const percentage = (value * 100) / total;
     return percentage.toFixed(2);
   };
+
+  const size = useWindowSize();
+
+  useEffect(() => {
+    const element = document.getElementById('main-content');
+    const elementRepo = document.getElementById('main-repo');
+    if (size.width <= 561 || size.height <= 768) {
+      element.style.height = 'calc(100% - 54px)';
+      if (elementRepo) elementRepo.style.height = 'auto';
+    } else if (size.width > 561) {
+      element.style.height = '100%';
+      elementRepo.style.height = 'calc(100vh - 94px)';
+    }
+  }, [size]);
 
   useEffect(() => {
     async function loadRepoInfo() {
@@ -147,7 +162,7 @@ const Repo: React.FC = () => {
         const contributorsResponse = await api.get(`repos/${username}/${reponame}/contributors`);
         const contributors = contributorsResponse.data;
         const shuffledContributors = contributors.sort(() => 0.5 - Math.random());
-        const slicedContributors = shuffledContributors.slice(0, 10);
+        const slicedContributors = shuffledContributors.slice(0, 7);
         setContributors(slicedContributors);
       } catch (err) {
         const error = err?.response?.data?.message ? err.response.data.message : err.message;
@@ -226,7 +241,7 @@ const Repo: React.FC = () => {
 
   if (loading) {
     return (
-      <Container id="main-profile">
+      <Container id="main-repo">
         <Loader>
           <ClipLoader size={25} color="#6a737d" />
         </Loader>
@@ -243,7 +258,7 @@ const Repo: React.FC = () => {
   }
 
   return (
-    <Container>
+    <Container id="main-repo">
       <Header>
         <HeaderInfo>
           <Breadcrumb>
