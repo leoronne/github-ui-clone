@@ -114,6 +114,7 @@ export const PeopleIcon = styled(RiGroupLine)`
 `;
 
 export const Column = styled.ul`
+  margin-top: 10px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--border);
   li {

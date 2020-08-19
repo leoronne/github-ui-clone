@@ -339,7 +339,7 @@ export const Row = styled.div`
 
       > span {
         margin-left: 5px;
-        font-size: 16px;
+        font-size: 14px;
         color: var(--gray);
       }
     }

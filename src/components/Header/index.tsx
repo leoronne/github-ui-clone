@@ -1,7 +1,6 @@
 /* eslint-disable react/button-has-type */
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ReactTooltip from 'react-tooltip';
 
 import { Container, GithubLogo, SearchForm, MoonIcon, SunIcon, SearchIcon } from './styles';
 
@@ -41,7 +40,6 @@ const Header: React.FC<Props> = ({ themeName, setThemeName }) => {
       <div className="theme" data-tip={`Activate ${themeName === 'light' ? 'Dark' : 'Light'} Mode`}>
         {themeName === 'light' ? <MoonIcon onClick={toggleTheme} /> : <SunIcon onClick={toggleTheme} />}
       </div>
-      <ReactTooltip place="bottom" type="dark" effect="solid" />
     </Container>
   );
 };

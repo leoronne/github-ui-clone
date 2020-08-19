@@ -36,6 +36,7 @@ interface Orgs {
 
 interface Props {
   username: string;
+  type?: string;
   name: string;
   avatarUrl: string;
   followers: number;
@@ -49,7 +50,7 @@ interface Props {
   orgs?: Array<Orgs>;
 }
 
-const ProfileData: React.FC<Props> = ({ username, name, avatarUrl, followers, following, company, location, email, blog, bio, twitter, orgs }) => {
+const ProfileData: React.FC<Props> = ({ username, type, name, avatarUrl, followers, following, company, location, email, blog, bio, twitter, orgs }) => {
   return (
     <Container>
       <Flex>
@@ -65,19 +66,21 @@ const ProfileData: React.FC<Props> = ({ username, name, avatarUrl, followers, fo
         </div>
       </Flex>
 
-      <Row>
-        <li className="link-li" onClick={() => window.open(`https://github.com/${username}?tab=followers`, '_blank')} data-tip="Go to user's followers">
-          <PeopleIcon />
-          <b>{kFormatter(followers)}</b>
-          <span>followers</span>
-          <span>·</span>
-        </li>
+      {type !== 'Organization' && (
+        <Row>
+          <li className="link-li" onClick={() => window.open(`https://github.com/${username}?tab=followers`, '_blank')} data-tip="Go to user's followers">
+            <PeopleIcon />
+            <b>{kFormatter(followers)}</b>
+            <span>followers</span>
+            <span>·</span>
+          </li>
 
-        <li className="link-li" onClick={() => window.open(`https://github.com/${username}?tab=following`, '_blank')} data-tip="Go to user's followings">
-          <b>{kFormatter(following)}</b>
-          <span>following</span>
-        </li>
-      </Row>
+          <li className="link-li" onClick={() => window.open(`https://github.com/${username}?tab=following`, '_blank')} data-tip="Go to user's followings">
+            <b>{kFormatter(following)}</b>
+            <span>following</span>
+          </li>
+        </Row>
+      )}
 
       <Column>
         {company && (

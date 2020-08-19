@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
 import ReactTooltip from 'react-tooltip';
-import { useFavicon } from 'react-use';
+import { useFavicon, useTitle } from 'react-use';
 
 import notify from '../../services/toast';
 
@@ -118,7 +118,7 @@ const Repo: React.FC = () => {
 
         const languagesResponse = await api.get(`repos/${username}/${reponame}/languages`);
         const languages = languagesResponse.data;
-        if (languages !== {}) {
+        if (Object.keys(languages).length > 0) {
           const allMb = sumValues(languages);
           const languageKeys = Object.keys(languages);
           const calculatedLanguages = languageKeys.map(lang => {
@@ -131,7 +131,7 @@ const Repo: React.FC = () => {
             slicedLanguages.forEach(lng => {
               remainingValues += Number(lng.percentage);
             });
-            mainLanguages.push({ language: 'Other', percentage: String(remainingValues) });
+            mainLanguages.push({ language: 'Other', percentage: String(remainingValues.toFixed(2)) });
             setLanguages(mainLanguages);
           } else setLanguages(calculatedLanguages);
         }
@@ -168,6 +168,8 @@ const Repo: React.FC = () => {
     }
     loadRepoInfo();
   }, [reponame, username]);
+
+  useTitle(`GitHub UI Clone${loading || data?.error ? '' : ` | ${username}/${reponame}`}`);
 
   function getLanguageColor(language) {
     const languageName = language ? language.replace(' ', '-').toLowerCase() : 'other';

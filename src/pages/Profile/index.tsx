@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
 import ReactTooltip from 'react-tooltip';
 
+import { useTitle } from 'react-use';
 import { Container, Main, LeftSide, RightSide, Repos, CalendarHeading, RepoIcon, OverViewIcon, ProjectsIcon, PackagesIcon, Tab, Loader } from './styles';
 
 import ProfileData from '../../components/ProfileData';
@@ -101,6 +102,8 @@ const Profile: React.FC = () => {
     loadUserInfo();
   }, [username]);
 
+  useTitle(`GitHub UI Clone${loading || data?.error ? '' : ` | ${data.user.name}`}`);
+
   if (loading) {
     return (
       <Container panelActive={panelActive} id="main-profile">
@@ -143,7 +146,6 @@ const Profile: React.FC = () => {
 
   return (
     <Container panelActive={panelActive} id="main-profile">
-      <ReactTooltip place="bottom" type="dark" effect="solid" />
       <Tab className="desktop">
         <div className="wrapper">
           <span className="offset" />
@@ -156,6 +158,7 @@ const Profile: React.FC = () => {
       <Main>
         <LeftSide>
           <ProfileData
+            type={data.user?.type}
             username={data.user.login}
             bio={data.user?.bio}
             name={data.user.name}
@@ -236,6 +239,8 @@ const Profile: React.FC = () => {
           )}
         </RightSide>
       </Main>
+
+      <ReactTooltip place="bottom" type="dark" effect="solid" />
     </Container>
   );
 };
