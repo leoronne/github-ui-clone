@@ -1,8 +1,16 @@
 <p align="center">
-  <img src="src\assets\img\socialBanner.png"/>
+  <img src="src\assets\img\transparentBanner.png" width="70%"/>
 </p>
 
 <br>
+
+<div align="center" style="margin: 20px; text-align: center">
+
+  [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
+  ![GitHub last commit](https://img.shields.io/github/last-commit/leoronne/github-ui-clone?color=green&style=flat-square)
+  ![GitHub top language](https://img.shields.io/github/languages/top/leoronne/github-ui-clone?style=flat-square)
+
+</div>
 
 ##
 
