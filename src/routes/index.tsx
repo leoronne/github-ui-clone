@@ -1,10 +1,10 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-import Header from '../components/Header';
 import Profile from '../pages/Profile';
 import Repo from '../pages/Repo';
-import Footer from '../components/Footer';
+
+import { Footer, Header, Error404 } from '../components';
 
 import { ThemeName } from '../styles/themes';
 
@@ -22,6 +22,7 @@ const RoutesList: React.FC<RoutesProps> = ({ theme, onChange }) => (
           <Route path="/" element={<Profile />} />
           <Route path="/:username" element={<Profile />} />
           <Route path="/:username/:reponame" element={<Repo />} />
+          <Route element={<Error404 />} />
         </Routes>
         <Footer />
       </div>

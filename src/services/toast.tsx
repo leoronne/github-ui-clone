@@ -2,6 +2,7 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import { FaExclamationTriangle, FaCheck } from 'react-icons/fa';
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function notify(msg: string, type: string) {
   const content = (
     <div className="toast-card">

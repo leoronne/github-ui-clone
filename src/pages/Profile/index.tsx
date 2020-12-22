@@ -1,21 +1,21 @@
+/* eslint-disable jsx-a11y/interactive-supports-focus */
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { ClipLoader } from 'react-spinners';
-import ReactTooltip from 'react-tooltip';
-
 import { useTitle } from 'react-use';
-import { Container, Main, LeftSide, RightSide, Repos, CalendarHeading, RepoIcon, OverViewIcon, ProjectsIcon, PackagesIcon, Tab, Loader } from './styles';
+import { Tooltip } from '@material-ui/core';
 
-import ProfileData from '../../components/ProfileData';
-import RepoCard from '../../components/RepoCard';
-import RandomCalendar from '../../components/RandomCalendar';
-import Error404 from '../../components/Error404';
+import { ProfileData, Error404, LoaderSpinner, RandomCalendar, RepoCard } from '../../components';
 
 import { APIUser, APIRepo } from '../../@types';
+
 import api from '../../services/api';
 import notify from '../../services/toast';
+
 import kFormatter from '../../utils/kFormatter';
 import useWindowSize from '../../utils/useWindowSize';
+
+import { useStyles } from '../../styles/MaterialUI';
+import { Container, Main, LeftSide, RightSide, Repos, CalendarHeading, RepoIcon, OverViewIcon, ProjectsIcon, PackagesIcon, Tab } from './styles';
 
 interface Data {
   user?: APIUser;
@@ -25,6 +25,8 @@ interface Data {
 
 const Profile: React.FC = () => {
   const { username = 'facebook' } = useParams();
+  const classes = useStyles();
+
   const [data, setData] = useState<Data>();
   const [panelActive, setPanelActive] = useState(1);
   const [repositories, setRepos] = useState([]);
@@ -83,42 +85,40 @@ const Profile: React.FC = () => {
   useTitle(`GitHub UI Clone${loading || data?.error ? '' : ` | ${data.user.name}`}`);
 
   if (loading) {
-    return (
-      <Container panelActive={panelActive} id="main-profile">
-        <Loader>
-          <ClipLoader size={25} color="#6a737d" />
-        </Loader>
-      </Container>
-    );
+    return <LoaderSpinner color="#6a737d" />;
   }
 
   if (data?.error) {
-    return (
-      <>
-        <Error404 />
-      </>
-    );
+    return <Error404 />;
   }
 
   const TabContent = () => (
     <>
-      <div className={`content ${panelActive === 1 ? ' active' : ''}`} onClick={() => setPanelActive(1)} role="button" data-tip="User's Overview page">
-        <OverViewIcon />
-        <span className="label">Overview</span>
-      </div>
-      <div className={`content ${panelActive === 2 ? ' active' : ''}`} onClick={() => setPanelActive(2)} role="button" data-tip="User's Repositories">
-        <RepoIcon />
-        <span className="label">Repositories</span>
-        <span className="number">{kFormatter(data.user?.public_repos)}</span>
-      </div>
-      <div className="content" onClick={() => window.open(`https://github.com/${data.user.login}?tab=projects`, '_blank')} role="button" data-tip="Go to user's projects">
-        <ProjectsIcon />
-        <span className="label">Projects</span>
-      </div>
-      <div className="content" onClick={() => window.open(`https://github.com/${data.user.login}?tab=packages`, '_blank')} role="button" data-tip="Go to user's packages">
-        <PackagesIcon />
-        <span className="label">Packages</span>
-      </div>
+      <Tooltip title="User's Overview page" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <div className={`content ${panelActive === 1 ? ' active' : ''}`} onClick={() => setPanelActive(1)} role="button">
+          <OverViewIcon />
+          <span className="label">Overview</span>
+        </div>
+      </Tooltip>
+      <Tooltip title="User's Repositories" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <div className={`content ${panelActive === 2 ? ' active' : ''}`} onClick={() => setPanelActive(2)} role="button">
+          <RepoIcon />
+          <span className="label">Repositories</span>
+          <span className="number">{kFormatter(data.user?.public_repos)}</span>
+        </div>
+      </Tooltip>
+      <Tooltip title="Go to user's projects" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <div className="content" onClick={() => window.open(`https://github.com/${data.user.login}?tab=projects`, '_blank')} role="button">
+          <ProjectsIcon />
+          <span className="label">Projects</span>
+        </div>
+      </Tooltip>
+      <Tooltip title="Go to user's packages" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <div className="content" onClick={() => window.open(`https://github.com/${data.user.login}?tab=packages`, '_blank')} role="button">
+          <PackagesIcon />
+          <span className="label">Packages</span>
+        </div>
+      </Tooltip>
     </>
   );
 
@@ -177,9 +177,9 @@ const Profile: React.FC = () => {
                 </div>
               </Repos>
 
-              <CalendarHeading data-tip="Does not represent actual contribution data">
-                {`${kFormatter(Math.floor(Math.random() * (2000 - 1)) + 1)} contributions in the last year`}
-              </CalendarHeading>
+              <Tooltip title="Does not represent actual contribution data" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+                <CalendarHeading>{`${kFormatter(Math.floor(Math.random() * (2000 - 1)) + 1)} contributions in the last year`}</CalendarHeading>
+              </Tooltip>
 
               <RandomCalendar />
             </>
@@ -188,15 +188,11 @@ const Profile: React.FC = () => {
               <Repos>
                 <h2>Repositories</h2>
                 {data?.repos.length > 0 && (
-                  <a
-                    href={`https://github.com/${username}?tab=repositories`}
-                    className="repo-link"
-                    data-tip={`see all repositories from ${username}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    see all repositories
-                  </a>
+                  <Tooltip title={`see all repositories from ${username}`} placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+                    <a href={`https://github.com/${username}?tab=repositories`} className="repo-link" target="_blank" rel="noopener noreferrer">
+                      see all repositories
+                    </a>
+                  </Tooltip>
                 )}
                 <div>
                   {repositories.map(item => (
@@ -217,8 +213,6 @@ const Profile: React.FC = () => {
           )}
         </RightSide>
       </Main>
-
-      <ReactTooltip place="bottom" type="dark" effect="solid" />
     </Container>
   );
 };

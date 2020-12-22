@@ -1,18 +1,23 @@
+/* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ClipLoader } from 'react-spinners';
-import ReactTooltip from 'react-tooltip';
+import { Tooltip } from '@material-ui/core';
 import { useFavicon, useTitle } from 'react-use';
 
+import { APIRepo } from '../../@types';
+
+import api from '../../services/api';
 import notify from '../../services/toast';
 
 import languageColors from '../../utils/language-colors';
 import kFormatter from '../../utils/kFormatter';
+import useWindowSize from '../../utils/useWindowSize';
 
-import Error404 from '../../components/Error404';
+import { Error404, LoaderSpinner } from '../../components';
 
+import { useStyles } from '../../styles/MaterialUI';
 import {
   Container,
   Breadcrumb,
@@ -29,10 +34,7 @@ import {
   SecurityIcon,
   SettingsIcon,
   ProjectsIcon,
-  // LinkButton,
-  // GithubIcon,
   WatchIcon,
-  Loader,
   Header,
   HeaderInfo,
   ForkedInfo,
@@ -51,10 +53,6 @@ import {
   HorizontalBar,
   LanguageBar,
 } from './styles';
-
-import { APIRepo } from '../../@types';
-import api from '../../services/api';
-import useWindowSize from '../../utils/useWindowSize';
 
 interface Data {
   repo?: APIRepo;
@@ -83,6 +81,8 @@ interface Commits {
 
 const Repo: React.FC = () => {
   const { username, reponame } = useParams();
+  const classes = useStyles();
+
   const [data, setData] = useState<Data>();
   const [repoLanguages, setLanguages] = useState([]);
   const [repoReleases, setReleases] = useState<Array<Releases>>([]);
@@ -106,12 +106,15 @@ const Repo: React.FC = () => {
   useEffect(() => {
     const element = document.getElementById('main-content');
     const elementRepo = document.getElementById('main-repo');
-    if (size.width <= 561 || size.height <= 768) {
-      element.style.height = 'calc(100% - 54px)';
-      if (elementRepo) elementRepo.style.height = 'auto';
-    } else if (size.width > 561) {
-      element.style.height = '100%';
-      elementRepo.style.height = 'calc(100vh - 94px)';
+
+    if (elementRepo && element) {
+      if (size.width <= 561 || size.height <= 768) {
+        element.style.height = 'calc(100% - 54px)';
+        if (elementRepo) elementRepo.style.height = 'auto';
+      } else if (size.width > 561) {
+        element.style.height = '100%';
+        elementRepo.style.height = 'calc(100vh - 94px)';
+      }
     }
   }, [size]);
 
@@ -198,55 +201,67 @@ const Repo: React.FC = () => {
 
   const TabContent = () => (
     <>
-      <div className="content active" role="button" data-tip="Repository's Code page" onClick={() => window.open(`https://github.com/${username}/${reponame}`, 'blank')}>
-        <CodeIcon />
-        <span className="label">Code</span>
-      </div>
-      <div className="content" role="button" data-tip="Repository's Issues page" onClick={() => window.open(`https://github.com/${username}/${reponame}/issues`, 'blank')}>
-        <IssuesIcon />
-        <span className="label">Issues</span>
-        {repoIssues > 0 && <span className="number">{repoIssues}</span>}
-      </div>
-      <div className="content" role="button" data-tip="Repository's Pull requests page" onClick={() => window.open(`https://github.com/${username}/${reponame}/pulls`, 'blank')}>
-        <PullRequestIcon />
-        <span className="label">Pull requests</span>
-        {repoPulls > 0 && <span className="number">{repoPulls}</span>}
-      </div>
-      <div className="content" role="button" data-tip="Repository's Actions page" onClick={() => window.open(`https://github.com/${username}/${reponame}/actions`, 'blank')}>
-        <ActionsIcon />
-        <span className="label">Actions</span>
-      </div>
-      <div className="content" role="button" data-tip="Repository's Projects page" onClick={() => window.open(`https://github.com/${username}/${reponame}/projects`, 'blank')}>
-        <ProjectsIcon />
-        <span className="label">Projects</span>
-      </div>
-      <div className="content" role="button" data-tip="Repository's Wiki page" onClick={() => window.open(`https://github.com/${username}/${reponame}/wiki`, 'blank')}>
-        <WikiIcon />
-        <span className="label">Wiki</span>
-      </div>
-      <div className="content" role="button" data-tip="Repository's Security page" onClick={() => window.open(`https://github.com/${username}/${reponame}/security`, 'blank')}>
-        <SecurityIcon />
-        <span className="label">Security</span>
-      </div>
-      <div className="content" role="button" data-tip="Repository's Insights page" onClick={() => window.open(`https://github.com/${username}/${reponame}/pulse`, 'blank')}>
-        <InsightsIcon />
-        <span className="label">Insights</span>
-      </div>
-      <div className="content" role="button" data-tip="Repository's Settings page" onClick={() => window.open(`https://github.com/${username}/${reponame}/settings`, 'blank')}>
-        <SettingsIcon />
-        <span className="label">Settings</span>
-      </div>
+      <Tooltip title="Repository's Code page" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <div className="content active" role="button" onClick={() => window.open(`https://github.com/${username}/${reponame}`, 'blank')}>
+          <CodeIcon />
+          <span className="label">Code</span>
+        </div>
+      </Tooltip>
+      <Tooltip title="Repository's Issues page" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <div className="content" role="button" onClick={() => window.open(`https://github.com/${username}/${reponame}/issues`, 'blank')}>
+          <IssuesIcon />
+          <span className="label">Issues</span>
+          {repoIssues > 0 && <span className="number">{repoIssues}</span>}
+        </div>
+      </Tooltip>
+      <Tooltip title="Repository's Pull requests page" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <div className="content" role="button" onClick={() => window.open(`https://github.com/${username}/${reponame}/pulls`, 'blank')}>
+          <PullRequestIcon />
+          <span className="label">Pull requests</span>
+          {repoPulls > 0 && <span className="number">{repoPulls}</span>}
+        </div>
+      </Tooltip>
+      <Tooltip title="Repository's Actions page" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <div className="content" role="button" onClick={() => window.open(`https://github.com/${username}/${reponame}/actions`, 'blank')}>
+          <ActionsIcon />
+          <span className="label">Actions</span>
+        </div>
+      </Tooltip>
+      <Tooltip title="Repository's Projects page" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <div className="content" role="button" onClick={() => window.open(`https://github.com/${username}/${reponame}/projects`, 'blank')}>
+          <ProjectsIcon />
+          <span className="label">Projects</span>
+        </div>
+      </Tooltip>
+      <Tooltip title="Repository's Wiki page" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <div className="content" role="button" onClick={() => window.open(`https://github.com/${username}/${reponame}/wiki`, 'blank')}>
+          <WikiIcon />
+          <span className="label">Wiki</span>
+        </div>
+      </Tooltip>
+      <Tooltip title="Repository's Security page" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <div className="content" role="button" onClick={() => window.open(`https://github.com/${username}/${reponame}/security`, 'blank')}>
+          <SecurityIcon />
+          <span className="label">Security</span>
+        </div>
+      </Tooltip>
+      <Tooltip title="Repository's Insights page" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <div className="content" role="button" onClick={() => window.open(`https://github.com/${username}/${reponame}/pulse`, 'blank')}>
+          <InsightsIcon />
+          <span className="label">Insights</span>
+        </div>
+      </Tooltip>
+      <Tooltip title="Repository's Settings page" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <div className="content" role="button" onClick={() => window.open(`https://github.com/${username}/${reponame}/settings`, 'blank')}>
+          <SettingsIcon />
+          <span className="label">Settings</span>
+        </div>
+      </Tooltip>
     </>
   );
 
   if (loading) {
-    return (
-      <Container id="main-repo">
-        <Loader>
-          <ClipLoader size={25} color="#6a737d" />
-        </Loader>
-      </Container>
-    );
+    return <LoaderSpinner color="#6a737d" />;
   }
 
   if (data?.error || !data?.repo) {
@@ -270,40 +285,41 @@ const Repo: React.FC = () => {
               </Link>
 
               <span>/</span>
-              <a href={`https://github.com/${username}/${reponame}`} target="_blank" rel="noopener noreferrer" className="reponame" data-tip="View repository on GitHub">
-                {reponame}
-              </a>
+              <Tooltip title="View repository on GitHub" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+                <a href={`https://github.com/${username}/${reponame}`} target="_blank" rel="noopener noreferrer" className="reponame">
+                  {reponame}
+                </a>
+              </Tooltip>
             </div>
           </Breadcrumb>
 
           <Stats>
-            <li
-              data-tip={`${data.repo.subscribers_count} users are watching this repository`}
-              onClick={() => window.open(`https://github.com/${username}/${reponame}/watchers`, 'blank')}
-              role="link"
+            <Tooltip title={`${data.repo.subscribers_count} users are watching this repository`} placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+              <li onClick={() => window.open(`https://github.com/${username}/${reponame}/watchers`, 'blank')} role="link">
+                <WatchIcon />
+                <span>Watch</span>
+                <b>{kFormatter(data.repo.subscribers_count)}</b>
+              </li>
+            </Tooltip>
+            <Tooltip title={`This repository has ${data.repo.stargazers_count} stars`} placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+              <li onClick={() => window.open(`https://github.com/${username}/${reponame}/stargazers`, 'blank')} role="link">
+                <StarIcon />
+                <span>Star</span>
+                <b>{kFormatter(data.repo.stargazers_count)}</b>
+              </li>
+            </Tooltip>
+            <Tooltip
+              title={`This repository was forked by ${data.repo?.fork && data.repo?.parent?.forks_count ? data.repo.parent.forks_count : data.repo.forks} users`}
+              placement="bottom"
+              arrow
+              classes={{ tooltip: classes.tooltip }}
             >
-              <WatchIcon />
-              <span>Watch</span>
-              <b>{kFormatter(data.repo.subscribers_count)}</b>
-            </li>
-            <li
-              data-tip={`This repository has ${data.repo.stargazers_count} stars`}
-              onClick={() => window.open(`https://github.com/${username}/${reponame}/stargazers`, 'blank')}
-              role="link"
-            >
-              <StarIcon />
-              <span>Star</span>
-              <b>{kFormatter(data.repo.stargazers_count)}</b>
-            </li>
-            <li
-              data-tip={`This repository was forked by ${data.repo?.fork && data.repo?.parent?.forks_count ? data.repo.parent.forks_count : data.repo.forks} users`}
-              onClick={() => window.open(`https://github.com/${username}/${reponame}/network/members`, 'blank')}
-              role="link"
-            >
-              <ForkIcon />
-              <span>Fork</span>
-              <b>{data.repo?.fork && data.repo?.parent?.forks_count ? kFormatter(data.repo.parent.forks_count) : kFormatter(data.repo.forks)}</b>
-            </li>
+              <li onClick={() => window.open(`https://github.com/${username}/${reponame}/network/members`, 'blank')} role="link">
+                <ForkIcon />
+                <span>Fork</span>
+                <b>{data.repo?.fork && data.repo?.parent?.forks_count ? kFormatter(data.repo.parent.forks_count) : kFormatter(data.repo.forks)}</b>
+              </li>
+            </Tooltip>
           </Stats>
         </HeaderInfo>
 
@@ -333,20 +349,19 @@ const Repo: React.FC = () => {
               <>
                 <div className="commiter">
                   {repoCommits[0]?.author?.avatar_url && (
-                    <a href={`/${repoCommits[0].author.login}`} data-tip={`Go to ${repoCommits[0].author.login} profile`} target="_blank" rel="noopener noreferrer">
-                      <img src={repoCommits[0].author.avatar_url} alt={repoCommits[0].author.login} />
-                    </a>
+                    <Tooltip title={`Go to ${repoCommits[0].author.login} profile`} placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+                      <a href={`/${repoCommits[0].author.login}`} target="_blank" rel="noopener noreferrer">
+                        <img src={repoCommits[0].author.avatar_url} alt={repoCommits[0].author.login} />
+                      </a>
+                    </Tooltip>
                   )}
                   {repoCommits[0]?.author?.login && (
                     <span className="user">
-                      <a
-                        href={`https://github.com/${username}/${reponame}/commits?author=${repoCommits[0]?.author?.login}`}
-                        data-tip={`See commits from ${repoCommits[0].author.login}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {repoCommits[0].author.login}
-                      </a>
+                      <Tooltip title={`See commits from ${repoCommits[0].author.login}`} placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+                        <a href={`https://github.com/${username}/${reponame}/commits?author=${repoCommits[0]?.author?.login}`} target="_blank" rel="noopener noreferrer">
+                          {repoCommits[0].author.login}
+                        </a>
+                      </Tooltip>
                     </span>
                   )}
                   {repoCommits[0]?.commit?.message && (
@@ -359,22 +374,27 @@ const Repo: React.FC = () => {
                 </div>
                 <div className="commiter-sha">
                   <CheckIcon />
-
-                  <a href={`https://github.com/${username}/${reponame}/commit/${repoCommits[0].sha}`} data-tip="See commit on GitHub" target="_blank" rel="noopener noreferrer">
-                    {repoCommits[0].sha}
-                  </a>
+                  <Tooltip title="See commit on GitHub" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+                    <a href={`https://github.com/${username}/${reponame}/commit/${repoCommits[0].sha}`} target="_blank" rel="noopener noreferrer">
+                      {repoCommits[0].sha}
+                    </a>
+                  </Tooltip>
                 </div>
                 <div className="last-commit">
-                  <a href={`https://github.com/${username}/${reponame}/commit/${repoCommits[0].sha}`} data-tip="See commit on GitHub" target="_blank" rel="noopener noreferrer">
-                    {`on ${getReleaseDate(repoCommits[0]?.commit?.author?.date)}`}
-                  </a>
+                  <Tooltip title="See commit on GitHub" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+                    <a href={`https://github.com/${username}/${reponame}/commit/${repoCommits[0].sha}`} target="_blank" rel="noopener noreferrer">
+                      {`on ${getReleaseDate(repoCommits[0]?.commit?.author?.date)}`}
+                    </a>
+                  </Tooltip>
                 </div>
                 <div className="number-commits">
                   <CommitsIcon />
 
-                  <a href={`https://github.com/${username}/${reponame}/commits/master`} data-tip="See all commits on GitHub" target="_blank" rel="noopener noreferrer">
-                    {`${repoCommits.length} commits`}
-                  </a>
+                  <Tooltip title="See all commits on GitHub" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+                    <a href={`https://github.com/${username}/${reponame}/commits/master`} target="_blank" rel="noopener noreferrer">
+                      {`${repoCommits.length} commits`}
+                    </a>
+                  </Tooltip>
                 </div>
               </>
             )}
@@ -420,15 +440,12 @@ const Repo: React.FC = () => {
                   <TagIcon />
                 </div>
                 <div className="info">
-                  <a
-                    href={`https://github.com/${username}/${reponame}/releases/tag/${repoReleases[0].tag_name}`}
-                    data-tip="See more details on GitHub"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <h4>{repoReleases[0].name}</h4>
-                    <span>{getReleaseDate(repoReleases[0].published_at)}</span>
-                  </a>
+                  <Tooltip title="See more details on GitHub" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+                    <a href={`https://github.com/${username}/${reponame}/releases/tag/${repoReleases[0].tag_name}`} target="_blank" rel="noopener noreferrer">
+                      <h4>{repoReleases[0].name}</h4>
+                      <span>{getReleaseDate(repoReleases[0].published_at)}</span>
+                    </a>
+                  </Tooltip>
                 </div>
                 <span className="latest">Latest</span>
               </ReleaseInfo>
@@ -438,7 +455,6 @@ const Repo: React.FC = () => {
                   see more releases
                 </a>
               )}
-              <ReactTooltip place="bottom" type="dark" effect="solid" />
             </Row>
           )}
           {repoContributors.length > 0 && (
@@ -448,9 +464,11 @@ const Repo: React.FC = () => {
               <Contributors>
                 {repoContributors.map(contributor => (
                   <ContributorsCard key={contributor?.login}>
-                    <a href={`https://github.com/${contributor.login}`} target="_blank" rel="noopener noreferrer" data-tip={`Go to ${contributor.login}`}>
-                      <img src={contributor?.avatar_url} alt={contributor.login} />
-                    </a>
+                    <Tooltip title={`Go to ${contributor.login}`} placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+                      <a href={`https://github.com/${contributor.login}`} target="_blank" rel="noopener noreferrer">
+                        <img src={contributor?.avatar_url} alt={contributor.login} />
+                      </a>
+                    </Tooltip>
                   </ContributorsCard>
                 ))}
               </Contributors>
@@ -458,14 +476,10 @@ const Repo: React.FC = () => {
               <a href={`https://github.com/${username}/${reponame}/graphs/contributors`} target="_blank" rel="noopener noreferrer" className="link">
                 see all contributors
               </a>
-              <ReactTooltip place="bottom" type="dark" effect="solid" />
             </Row>
           )}
         </RightSide>
-
-        {/* <LeftSide></LeftSide> */}
       </RepoInformation>
-      <ReactTooltip place="bottom" type="dark" effect="solid" />
     </Container>
   );
 };

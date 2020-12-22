@@ -44,7 +44,6 @@ const RandomCalendar: React.FC = () => {
             return `scale-${clampedCount}`;
           }}
           showWeekdayLabels
-          data-tip="Doesn't represent actual contribution data"
         />
       </div>
 

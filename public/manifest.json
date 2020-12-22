@@ -1,10 +1,17 @@
 {
-  "short_name": "github-ui-clone",
+  "short_name": "github-homepage-ui-clone",
   "name": "GitHub UI Clone",
+  "author": "Leonardo Ronne",
+  "description": "This application contains an UI clone from GitHub (partial) website.",
+  "developer": {
+    "name": "Leonardo Ronne",
+    "url": "https://github.com/leoronne"
+  },
+  "homepage_url": "https://github.ui-clone.ronne.dev",
   "icons": [
     {
       "src": "favicon.ico",
-      "sizes": "32x32",
+      "sizes": "256x256",
       "type": "image/x-icon"
     },
     {
@@ -13,9 +20,19 @@
       "sizes": "192x192"
     },
     {
+      "src": "logo256.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    },
+    {
       "src": "logo512.png",
       "type": "image/png",
       "sizes": "512x512"
+    },
+    {
+      "src": "logo1024.png",
+      "type": "image/png",
+      "sizes": "1024x1024"
     }
   ],
   "start_url": "/",

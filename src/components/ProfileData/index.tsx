@@ -1,6 +1,10 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React from 'react';
+import { Tooltip } from '@material-ui/core';
 
+import kFormatter from '../../utils/kFormatter';
+
+import { useStyles } from '../../styles/MaterialUI';
 import {
   Container,
   Flex,
@@ -17,7 +21,6 @@ import {
   OrganizationsContainer,
   OrganizationCard,
 } from './styles';
-import kFormatter from '../../utils/kFormatter';
 
 interface Orgs {
   login?: string;
@@ -51,15 +54,19 @@ interface Props {
 }
 
 const ProfileData: React.FC<Props> = ({ username, type, name, avatarUrl, followers, following, company, location, email, blog, bio, twitter, orgs }) => {
+  const classes = useStyles();
+
   return (
     <Container>
       <Flex>
-        <Avatar src={avatarUrl} alt={username} data-tip="Go to user's GitHub profile" onClick={() => window.open(`https://github.com/${username}`, 'blank')} />
+        <Tooltip title="Go to user's GitHub profile" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+          <Avatar src={avatarUrl} alt={username} onClick={() => window.open(`https://github.com/${username}`, 'blank')} />
+        </Tooltip>
 
         <div>
           <h1>{name}</h1>
 
-          <a href={`https://github.com/${username}`} target="_blank" rel="noopener noreferrer" data-tip="Go to user's GitHub profile">
+          <a href={`https://github.com/${username}`} target="_blank" rel="noopener noreferrer">
             <h2>{username}</h2>
           </a>
           <p>{bio}</p>
@@ -68,17 +75,21 @@ const ProfileData: React.FC<Props> = ({ username, type, name, avatarUrl, followe
 
       {type !== 'Organization' && (
         <Row>
-          <li className="link-li" onClick={() => window.open(`https://github.com/${username}?tab=followers`, '_blank')} data-tip="Go to user's followers">
-            <PeopleIcon />
-            <b>{kFormatter(followers)}</b>
-            <span>followers</span>
-            <span>·</span>
-          </li>
+          <Tooltip title="Go to user's followers" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+            <li className="link-li" onClick={() => window.open(`https://github.com/${username}?tab=followers`, '_blank')}>
+              <PeopleIcon />
+              <b>{kFormatter(followers)}</b>
+              <span>followers</span>
+              <span>·</span>
+            </li>
+          </Tooltip>
 
-          <li className="link-li" onClick={() => window.open(`https://github.com/${username}?tab=following`, '_blank')} data-tip="Go to user's followings">
-            <b>{kFormatter(following)}</b>
-            <span>following</span>
-          </li>
+          <Tooltip title="Go to user's followings" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+            <li className="link-li" onClick={() => window.open(`https://github.com/${username}?tab=following`, '_blank')}>
+              <b>{kFormatter(following)}</b>
+              <span>following</span>
+            </li>
+          </Tooltip>
         </Row>
       )}
 
@@ -105,9 +116,11 @@ const ProfileData: React.FC<Props> = ({ username, type, name, avatarUrl, followe
           <li>
             <BlogIcon />
             <span>
-              <a href={blog} target="_blank" rel="noopener noreferrer" data-tip="Go to user's blog">
-                {blog}
-              </a>
+              <Tooltip title="Go to user's blog" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+                <a href={blog} target="_blank" rel="noopener noreferrer">
+                  {blog}
+                </a>
+              </Tooltip>
             </span>
           </li>
         )}
@@ -115,9 +128,11 @@ const ProfileData: React.FC<Props> = ({ username, type, name, avatarUrl, followe
           <li>
             <TwitterIcon />
             <span>
-              <a href={`https://twitter.com/${twitter}`} target="_blank" rel="noopener noreferrer" data-tip="Go to user's Twitter profile">
-                {`@${twitter}`}
-              </a>
+              <Tooltip title="Go to user's Twitter profile" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+                <a href={`https://twitter.com/${twitter}`} target="_blank" rel="noopener noreferrer">
+                  {`@${twitter}`}
+                </a>
+              </Tooltip>
             </span>
           </li>
         )}
@@ -128,9 +143,11 @@ const ProfileData: React.FC<Props> = ({ username, type, name, avatarUrl, followe
           <OrganizationsContainer>
             {orgs.map(org => (
               <OrganizationCard key={org?.login}>
-                <a href={`https://github.com/${org.login}`} target="_blank" rel="noopener noreferrer" data-tip={`Go to ${org.login}`}>
-                  <img src={org?.avatar_url} alt={org.login} />
-                </a>
+                <Tooltip title={`Go to ${org.login}`} placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+                  <a href={`https://github.com/${org.login}`} target="_blank" rel="noopener noreferrer">
+                    <img src={org?.avatar_url} alt={org.login} />
+                  </a>
+                </Tooltip>
               </OrganizationCard>
             ))}
           </OrganizationsContainer>

@@ -13,7 +13,7 @@ import './styles/ReactToastify.css';
 
 import { ThemeName, themes } from './styles/themes';
 
-function App() {
+const App: React.FC = () => {
   const [themeName, setThemeName] = useState<ThemeName>(localStorage.getItem('@Github:theme') === 'dark' ? 'dark' : 'light');
   const currentTheme = themes[themeName];
 

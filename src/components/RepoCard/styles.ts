@@ -36,6 +36,7 @@ export const Topside = styled.div`
     font-size: 12px;
     color: var(--gray);
     letter-spacing: 0.1px;
+    line-height: 20px;
     > a {
       text-decoration: none;
     }

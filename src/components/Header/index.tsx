@@ -1,7 +1,9 @@
 /* eslint-disable react/button-has-type */
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Tooltip } from '@material-ui/core';
 
+import { useStyles } from '../../styles/MaterialUI';
 import { Container, GithubLogo, SearchForm, MoonIcon, SunIcon, SearchIcon } from './styles';
 
 import { ThemeName } from '../../styles/themes';
@@ -12,6 +14,8 @@ interface Props {
 }
 
 const Header: React.FC<Props> = ({ themeName, setThemeName }) => {
+  const classes = useStyles();
+
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
 
@@ -28,18 +32,24 @@ const Header: React.FC<Props> = ({ themeName, setThemeName }) => {
 
   return (
     <Container>
-      <a href="/">
-        <GithubLogo data-tip="Go to homepage" />
-      </a>
+      <Tooltip title="Go to homepage" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <a href="/">
+          <GithubLogo />
+        </a>
+      </Tooltip>
       <SearchForm onSubmit={handleSubmit}>
-        <input placeholder="Search username" value={search} onChange={e => setSearch(e.currentTarget.value)} data-tip="Inform an username and press enter" />
-        <button type={search ? 'submit' : 'button'} data-tip="Search username on GitHub">
-          <SearchIcon />
-        </button>
+        <Tooltip title="Inform an username and press enter" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+          <input placeholder="Search username" value={search} onChange={e => setSearch(e.currentTarget.value)} />
+        </Tooltip>
+        <Tooltip title="Search username on GitHub" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+          <button type={search ? 'submit' : 'button'}>
+            <SearchIcon />
+          </button>
+        </Tooltip>
       </SearchForm>
-      <div className="theme" data-tip={`Activate ${themeName === 'light' ? 'Dark' : 'Light'} Mode`}>
-        {themeName === 'light' ? <MoonIcon onClick={toggleTheme} /> : <SunIcon onClick={toggleTheme} />}
-      </div>
+      <Tooltip title={`Activate ${themeName === 'light' ? 'Dark' : 'Light'} Mode`} placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <div className="theme">{themeName === 'light' ? <MoonIcon onClick={toggleTheme} /> : <SunIcon onClick={toggleTheme} />}</div>
+      </Tooltip>
     </Container>
   );
 };

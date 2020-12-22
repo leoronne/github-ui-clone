@@ -2,11 +2,13 @@
 /* eslint-disable react/jsx-indent */
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Tooltip } from '@material-ui/core';
 
 import languageColors from '../../utils/language-colors';
-
-import { Container, Topside, RepoIcon, Botside, StarIcon, ForkIcon, LanguageDot } from './styles';
 import kFormatter from '../../utils/kFormatter';
+
+import { useStyles } from '../../styles/MaterialUI';
+import { Container, Topside, RepoIcon, Botside, StarIcon, ForkIcon, LanguageDot } from './styles';
 
 interface Props {
   username: string;
@@ -19,6 +21,8 @@ interface Props {
 }
 
 const RepoCard: React.FC<Props> = ({ username, reponame, description, language, stars, forks, isForked }) => {
+  const classes = useStyles();
+
   const languageName = language ? language.replace(' ', '-').toLowerCase() : 'other';
   const languageColor = languageColors[languageName];
   return (
@@ -26,9 +30,9 @@ const RepoCard: React.FC<Props> = ({ username, reponame, description, language, 
       <Topside>
         <header>
           {isForked ? <ForkIcon /> : <RepoIcon />}
-          <Link to={`/${username}/${reponame}`} data-tip={`Go to ${reponame}`}>
-            {reponame}
-          </Link>
+          <Tooltip title={`Go to ${reponame}`} placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+            <Link to={`/${username}/${reponame}`}>{reponame}</Link>
+          </Tooltip>
         </header>
         <p>{description}</p>
       </Topside>
@@ -36,22 +40,28 @@ const RepoCard: React.FC<Props> = ({ username, reponame, description, language, 
       <Botside>
         <ul>
           {language && (
-            <li data-tip={`Repository main language: ${language}`}>
-              <LanguageDot color={languageColor || '#8257e5'} />
-              <span>{language}</span>
-            </li>
+            <Tooltip title={`Repository main language: ${language}`} placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+              <li>
+                <LanguageDot color={languageColor || '#8257e5'} />
+                <span>{language}</span>
+              </li>
+            </Tooltip>
           )}
           {stars && stars > 0 ? (
-            <li data-tip={`Repository has ${stars} stars`}>
-              <StarIcon />
-              <span>{kFormatter(stars)}</span>
-            </li>
+            <Tooltip title={`Repository has ${stars} stars`} placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+              <li>
+                <StarIcon />
+                <span>{kFormatter(stars)}</span>
+              </li>
+            </Tooltip>
           ) : null}
           {forks && forks > 0 ? (
-            <li data-tip={`Repository was forked by ${forks} users`}>
-              <ForkIcon />
-              <span>{kFormatter(forks)}</span>
-            </li>
+            <Tooltip title={`Repository was forked by ${forks} users`} placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+              <li>
+                <ForkIcon />
+                <span>{kFormatter(forks)}</span>
+              </li>
+            </Tooltip>
           ) : null}
         </ul>
       </Botside>
