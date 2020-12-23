@@ -18,7 +18,7 @@
 .toast-message {
   font-size: 16px;
   font-weight: 400;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Roboto', sans-serif;
   margin-left: 30px;
   margin-bottom: 0;
 }
@@ -96,7 +96,7 @@
   justify-content: space-between;
   max-height: 800px;
   overflow: hidden;
-  font-family: sans-serif;
+  font-family: 'Roboto', sans-serif;
   cursor: pointer;
   direction: ltr;
 }

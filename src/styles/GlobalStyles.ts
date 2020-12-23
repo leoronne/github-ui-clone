@@ -26,7 +26,7 @@ export default createGlobalStyle`
     border: 0;
     background: none;
     outline: none !important;
-    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;
+    font-family: var(--font-family);
     color: var(--black);
 
     transition: color .2s ease-out;

@@ -26,6 +26,8 @@ export const themes = {
     'calendar-scale-2': '#3FC463',
     'calendar-scale-3': '#30A14E',
     'calendar-scale-4': '#216E3A',
+
+    'font-family': '-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji',
   },
   dark: {
     primary: '#1D1D1D',
@@ -55,6 +57,8 @@ export const themes = {
     'calendar-scale-2': 'rgba(79, 140, 201, 0.5)',
     'calendar-scale-3': 'rgba(79, 140, 201, 0.75)',
     'calendar-scale-4': 'rgba(79, 140, 201, 1)',
+
+    'font-family': '-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji',
   },
 };
 
