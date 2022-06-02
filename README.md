@@ -34,9 +34,9 @@
 
 ## Project :star2:
 
-This repo contains an UI clone (partial) from GitHub application using it's public APIs.
+This project was part of an UI Clone challenge, the idea was to replicate (partially) the GitHub's profile and repository pages using it's public APIs. It was made using ReactJS, MUI and styled-components to build a Dark/Light theme.
 
-<br>
+The user can also navigate through different users and repositories.
 
 Deployed [here](https://github.ui-clone.ronne.dev).
 
